@@ -40,16 +40,6 @@ corr_plot <- ggcorrplot(res, method='circle')
 
 #cov(mi_comp$REC_IM, mi_comp$OTEK_LANC)
 
-
-
-#table(mi_comp_chr$SEX, mi_comp_chr$REC_IM)
-#.04411765/(.04941176+.04411765)
-#.04941176/(.04941176+.04411765)
-
-#(0.04411765/(0.32941176+0.04411765))/.1969834
-#(0.04941176/(0.57705882+0.04941176))/.1969834
-#.1181102+.07887323
-
 #mi_comp_chr %>% 
 #  ggplot() +
 #  geom_boxplot(aes(y=AGE, x=REC_IM, fill=REC_IM))
@@ -62,14 +52,26 @@ corr_plot <- ggcorrplot(res, method='circle')
 #  ggplot() +
 #  geom_bar(aes(x=REC_IM, fill=SEX), position='fill')
 
-# summary(lm(REC_IM ~ ., data=mi_comp[,2:124]))
+summary(glm(REC_IM ~ DLIT_AG, family='binomial', data=mi_comp))
 
-# summary(lm(REC_IM ~ NOT_NA_KB, data=mi_comp))
-# mi_comp_chr %>% 
-#  ggplot() +
-#  geom_boxplot(aes(y=AST_BLOOD, x=REC_IM, fill=REC_IM))+
-#  scale_y_log10()
-# table(mi_comp_chr$AST_BLOOD, mi_comp_chr$REC_IM)
-# 63/564
-# 30/366
-# prop.test(x=c(75, 49), n=c(722, 485))
+# DLIT_AG appears significant. Will need to look at missing data.
+mi_comp %>% 
+  ggplot() +
+  geom_boxplot(aes(y=DLIT_AG, x=factor(REC_IM), fill=factor(REC_IM)))
+
+#table(mi_comp_chr$DLIT_AG, mi_comp_chr$REC_IM)
+
+# ritm_ecg_p_07 may be significant
+prop.test(x=c(84, 981), n=c(159, 1541))
+
+table(mi_comp_chr$ritm_ecg_p_07, mi_comp_chr$REC_IM)
+
+mi_comp_chr %>% 
+  ggplot() +
+  geom_violin(aes(y=L_BLOOD, x=REC_IM, fill=REC_IM))
+
+summary(glm(REC_IM ~ L_BLOOD, data=mi_comp, family='binomial'))
+
+table(mi_comp_chr$n_p_ecg_p_12, mi_comp_chr$REC_IM)
+prop.test(x=c(5,73), n=c(140, 1445))
+

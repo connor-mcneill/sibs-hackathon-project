@@ -24,11 +24,26 @@ nas %>%
 # Handle Missing Data...how?
 
 # Remove Variables Not Needed
-test <- mi_comp %>% 
+## First remove other response variables
+other_response_vars <-  
+  c('FIBR_PREDS', 'PREDS_TAH', 'JELUD_TAH',
+         'FIBR_JELUD', 'A_V_BLOK', 'OTEK_LANC',
+         'RAZRIV', 'DRESSLER', 'ZSN',
+         'P_IM_STEN', 'LET_IS')
+mi_comp_clean <- mi_comp %>% 
   select(-ID, -KFK_BLOOD, -IBS_NASL, -S_AD_KBRIG, -D_AD_KBRIG,
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
-         -K_BLOOD, -GIPO_K, -AST_BLOOD)
+         -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
+         -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
+         -82:-50, -26:-13, -DLIT_AG) %>% 
+  remove_missing()
+
+#save(mi_comp_clean, file='data-files/mi_comp_data_cleaned.RData')
 # Refactor Variables for Exploratory Analysis & Plots
 # Done in the data-refactor-string file
 
-summary(glm(REC_IM ~ ., family='binomial', data=test))
+model <- glm(REC_IM ~ ., family='binomial', data=test)
+summary(model)
+null_model <- glm(REC_IM ~ 1, data=test, family='binomial')
+step_model <- MASS::stepAIC(model, direction='backward')
+
