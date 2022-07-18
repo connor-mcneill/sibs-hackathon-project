@@ -1,2 +1,2 @@
 # sibs-hackathon-project
-SIBS Hackathon Project
+This is the GitHub page for our SIBS Hackathon Project, which is our final project of the 2022 Summer Institute in Biostatistics Program hosted at North Carolina State University and Duke University. In this project, we analyze a dataset that focuses on complications following a heart attack (also known as a myocardial infarction, or MI) in patients from Krasnoyarsk Interdistrict Clinical Hospital in 1992-1995. This analysis will lead to a risk prediction model for predicting the risk of a subsequent heart attack (relapse of myocardial infarction).
