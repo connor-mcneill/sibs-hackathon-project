@@ -1,0 +1,43 @@
+---
+title: "SIBS Hackathon Presentation"
+author: "Kevin Krupa, Lucy Liu, Kendall McClellan, Connor McNeill"
+institute: "NCSU-Duke Summer Institute in Biostatistics"
+date: "July 21, 2022"
+output: 
+  beamer_presentation:
+    theme: 'Frankfurt'
+#    colortheme: 'beaver'
+    includes:
+      in_header: 'header.tex'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r coding for later, include=FALSE}
+source('hackathon-exploratory-data-analysis.R',
+       local=knitr::knit_global())
+```
+
+# Introduction
+
+## Background
+
+## Research Question
+
+# Descriptive Analysis
+
+## Response Variable Correlation
+
+```{r ResVarCorrPlot, warning=FALSE}
+corrplot(res, type='upper', order='hclust',
+         tl.col='black', tl.srt=45)
+```
+
+
+# Inferential Analysis
+
+# Discussion
+
+# Conclusion
