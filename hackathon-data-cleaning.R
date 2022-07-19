@@ -51,28 +51,7 @@ null_model <- glm(REC_IM ~ 1, data=mi_comp_clean, family='binomial')
 step_model <- MASS::stepAIC(model, direction='both')
 step(model)
 
-data_age <- mi_comp %>% 
-  select(AGE, other_response_vars) %>% 
-  remove_missing()
-age_model <- lm(AGE ~ ., data=data_age)
-summary(age_model)
-
-age_pred <- predict(age_model, mi_comp$other_response_vars)
-
-cbind(mi_comp$AGE, age_pred)
-mean(age_pred)
-mean(mi_comp$AGE, na.rm=TRUE)
-
-age_replace <- mi_comp %>% 
-  filter(is.na(AGE) == TRUE) %>% 
-  select(ID, AGE) %>% 
-  mutate(AGE=age_pred[ID])
-
-mi_comp$AGE[which(mi_comp$ID %in% age_replace$ID)] <- age_replace$AGE
-mi_comp %>% 
-  filter(ID==71)
-mean(mi_comp$AGE)
-
+# Option 1: Reduce dimensionality of ordinal med variables
 mi_comp_clean <- mi_comp_clean %>%  
   mutate(NOT_NA_n = if_else(
   NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
@@ -84,6 +63,7 @@ mi_comp_clean <- mi_comp_clean %>%
     0, 1)) %>% 
   select(-NA_R_1_n, -NA_R_2_n, -NA_R_3_n)
   
+# Option 2: Make med variables binary
 mi_comp_clean <- mi_comp_clean %>% 
   mutate(NOT_NA_1_n = if_else(NOT_NA_1_n == 0, 0, 1),
          NOT_NA_2_n = if_else(NOT_NA_2_n == 0, 0, 1),
@@ -99,6 +79,7 @@ step_data <- mi_comp %>%
   remove_missing() %>% 
   mutate(NA_R_2_n = if_else(NA_R_2_n == 0, 0, 1))
 
+# Look at models
 summary(step_model)
 summary(glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
             GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
