@@ -33,14 +33,9 @@ source('hackathon-exploratory-data-analysis.R',
 
 ## Research Question
 
-\begin{block}{Research Question 1}
-Newton proved that ...
-\end{block}
-
-\begin{block}{Research Question 2}
-Einstein proved that...
-\end{block}
-
+<!-- \begin{block}{Research Question} -->
+<!-- What can we measure to predict a risk of having another relapse? -->
+<!-- \end{block} -->
 
 # Descriptive Analysis
 
@@ -54,6 +49,7 @@ corrplot(res, type='upper', order='hclust',
 
 # Inferential Analysis
 
+## Intro
 LASSO Logistic Regression Model because
 - Reduce number of variables (LASSO)
 - Response variable is binary (Logistic Regression)
