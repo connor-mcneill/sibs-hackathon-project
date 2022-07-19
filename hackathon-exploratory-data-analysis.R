@@ -62,16 +62,36 @@ mi_comp %>%
 #table(mi_comp_chr$DLIT_AG, mi_comp_chr$REC_IM)
 
 # ritm_ecg_p_07 may be significant
-prop.test(x=c(84, 981), n=c(159, 1541))
+prop.test(x=c(44, 309), n=c(44+95, 1409))
 
 table(mi_comp_chr$ritm_ecg_p_07, mi_comp_chr$REC_IM)
 
+mi_comp_chr$SEX %>% head()
+mi_comp$SEX %>% head() 
+
 mi_comp_chr %>% 
   ggplot() +
-  geom_violin(aes(y=L_BLOOD, x=REC_IM, fill=REC_IM))
+  geom_boxplot(aes(y=L_BLOOD, x=REC_IM, fill=REC_IM)) + 
+  scale_y_log10()
 
-summary(glm(REC_IM ~ L_BLOOD, data=mi_comp, family='binomial'))
+
+lblood.model <- glm(REC_IM ~ L_BLOOD, data=mi_comp, family='binomial')
+summary(lblood.model)
 
 table(mi_comp_chr$n_p_ecg_p_12, mi_comp_chr$REC_IM)
 prop.test(x=c(5,73), n=c(140, 1445))
 
+table(mi_comp_chr$endocr_01, mi_comp_chr$REC_IM)
+prop.test(x=c(31,197), n=c(31+126, 197+1335))
+
+table(mi_comp_chr$SEX, mi_comp_chr$REC_IM)
+prop.test(x=c(75,84), n=c(75+560, 981+84))
+75/(75+560)
+84/(84+981)
+
+table(mi_comp_chr$B_BLOK_S_n, mi_comp_chr$REC_IM)
+prop.test(x=c(20, 195), n=c(138+20, 1336+195))
+
+
+ggplot() +
+  geom_boxplot(aes(x=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, y=mi_comp$STENOK_AN))
