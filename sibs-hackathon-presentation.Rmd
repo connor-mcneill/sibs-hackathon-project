@@ -7,6 +7,7 @@ output:
   beamer_presentation:
     theme: 'Frankfurt'
 #    colortheme: 'beaver'
+#    fonttheme: structurebold
     includes:
       in_header: 'header.tex'
 ---
@@ -24,7 +25,22 @@ source('hackathon-exploratory-data-analysis.R',
 
 ## Background
 
+- Bullet 1
+
+- Bullet 2
+
+- Bullet 3
+
 ## Research Question
+
+\begin{block}{Research Question 1}
+Newton proved that ...
+\end{block}
+
+\begin{block}{Research Question 2}
+Einstein proved that...
+\end{block}
+
 
 # Descriptive Analysis
 
@@ -38,6 +54,17 @@ corrplot(res, type='upper', order='hclust',
 
 # Inferential Analysis
 
+## Model
+
+$$ REC\_IM = \beta_0 + \beta_1 x_1 $$
+
 # Discussion
 
 # Conclusion
+
+##
+\begin{block}{}
+\begin{center}
+\Large{Questions??}
+\end{center}
+\end{block}

@@ -1,9 +1,12 @@
 # Load in Libraries
 library(tidyverse)
+install.packages('mice')
+library(mice)
 
 # Import Data
 mi_comp <- read.csv("C:/Users/conno/Downloads/Myocardial infarction complications Database.csv")
 # save(mi_comp,file='mi_comp_data_original.RData')
+md.pairs(mi_comp)
 
 # Look at data structure
 str(mi_comp)
@@ -47,3 +50,28 @@ summary(model)
 null_model <- glm(REC_IM ~ 1, data=test, family='binomial')
 step_model <- MASS::stepAIC(model, direction='backward')
 
+data_age <- mi_comp %>% 
+  select(AGE, other_response_vars) %>% 
+  remove_missing()
+age_model <- lm(AGE ~ ., data=data_age)
+summary(age_model)
+
+age_pred <- predict(age_model, mi_comp$other_response_vars)
+
+cbind(mi_comp$AGE, age_pred)
+mean(age_pred)
+mean(mi_comp$AGE, na.rm=TRUE)
+
+age_replace <- mi_comp %>% 
+  filter(is.na(AGE) == TRUE) %>% 
+  select(ID, AGE) %>% 
+  mutate(AGE=age_pred[ID])
+
+mi_comp$AGE[which(mi_comp$ID %in% age_replace$ID)] <- age_replace$AGE
+mi_comp %>% 
+  filter(ID==71)
+mean(mi_comp$AGE)
+
+mi_comp <- mi_comp %>%  mutate(NOT_NA_n = if_else(
+  NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
+  0, 1))
