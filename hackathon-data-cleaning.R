@@ -155,61 +155,62 @@ lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min)
 exp(lasso.b.coef2)#Estimated Odds Ratios
 ##~~~~~~~~~~LOOKS BETTER
 
-###############Ridge Reg for option1: Reduce dimensionality of ordinal med variables############
-inTrain <- as.vector(createDataPartition(mi_comp_clean1[,40],p=0.8,list=FALSE, times=1))
-dTrain <- mi_comp_clean1[inTrain,]; dim(dTrain)
-dTest <- mi_comp_clean1[-inTrain,]; dim(dTest)
+###############Elsatic Net Reg for option1: Reduce dimensionality of ordinal med variables############
+inTrain3 <- as.vector(createDataPartition(mi_comp_clean1[,40],p=0.8,list=FALSE, times=1))
+dTrain3 <- mi_comp_clean1[inTrain3,]; dim(dTrain3)
+dTest3 <- mi_comp_clean1[-inTrain3,]; dim(dTest3)
 
 #gather response var into vectors
-yTrain <- dTrain[,40]
-xTrain <- as.matrix(dTrain[,-40])
-yTest <- dTest[,40]
-xTest <- as.matrix(dTest[,-40])
+yTrain3 <- dTrain3[,40]
+xTrain3 <- as.matrix(dTrain3[,-40])
+yTest3 <- dTest3[,40]
+xTest3 <- as.matrix(dTest3[,-40])
 
-#To fit a lasso logistic regression model, the only modifications needed are to specify a factor response variable and to include family="binomial" in the glmnet call:
-fit.lasso.b <- glmnet(xTrain, yTrain, alpha=0, standardize=TRUE, family="binomial")
-plot(fit.lasso.b, label=TRUE, xvar="lambda")
+#To fit a Ridge logistic regression model, the only modifications needed are to specify a factor response variable and to include family="binomial" in the glmnet call:
+fit.lasso.b3 <- glmnet(xTrain3, yTrain3, alpha=0.5, standardize=TRUE, family="binomial")
+plot(fit.lasso.b3, label=TRUE, xvar="lambda")
 
 
 set.seed(123)
-cv.lasso.b <- cv.glmnet(xTrain, yTrain, alpha=0, standardize=TRUE, family="binomial", nfolds=10)
-plot(cv.lasso.b)
+cv.lasso.b3 <- cv.glmnet(xTrain3, yTrain3, alpha=0.5, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b3)
 
-cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+cv.lasso.b3$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
 
-cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+cv.lasso.b3$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 48.89813 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min)
-exp(lasso.b.coef)#Estimated Odds Ratios
+lasso.b.coef3 <- coef(cv.lasso.b3, s=cv.lasso.b3$lambda.min)
+exp(lasso.b.coef3)#Estimated Odds Ratios
 
 
 
-#############LASSO Reg for option2: Make med variables binary#############
+#############Elastic Net Reg for option2: Make med variables binary#############
 set.seed(777)
 #LASSO Reg for option2
-inTrain2 <- as.vector(createDataPartition(mi_comp_clean2[,40],p=0.8,list=FALSE, times=1))
-dTrain2 <- mi_comp_clean2[inTrain2,]; dim(dTrain2)
-dTest2 <- mi_comp_clean2[-inTrain2,]; dim(dTest2)
+inTrain4 <- as.vector(createDataPartition(mi_comp_clean2[,40],p=0.8,list=FALSE, times=1))
+dTrain4 <- mi_comp_clean2[inTrain4,]; dim(dTrain2)
+dTest4 <- mi_comp_clean2[-inTrain4,]; dim(dTest2)
 
 #gather response var into vectors
-yTrain2 <- dTrain2[,40]
-xTrain2 <- as.matrix(dTrain2[,-40])
-yTest2 <- dTest2[,40]
-xTest2 <- as.matrix(dTest2[,-40])
+yTrain4 <- dTrain4[,40]
+xTrain4 <- as.matrix(dTrain4[,-40])
+yTest4 <- dTest4[,40]
+xTest4 <- as.matrix(dTest4[,-40])
 
-fit.lasso.b2 <- glmnet(xTrain2, yTrain2, alpha=0, standardize=TRUE, family="binomial")
-plot(fit.lasso.b2, label=TRUE, xvar="lambda")
+fit.lasso.b4 <- glmnet(xTrain4, yTrain4, alpha=0.5, standardize=TRUE, family="binomial")
+plot(fit.lasso.b4, label=TRUE, xvar="lambda")
 
 set.seed(777)
-cv.lasso.b2 <- cv.glmnet(xTrain2, yTrain2, alpha=0, standardize=TRUE, family="binomial", nfolds=10)
-plot(cv.lasso.b2)
+cv.lasso.b4 <- cv.glmnet(xTrain4, yTrain4, alpha=0.5, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b4)
 
 #Estimating Odds Ratio
-cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+cv.lasso.b4$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
 
-cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+cv.lasso.b4$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min)
-exp(lasso.b.coef2)#Estimated Odds Ratios
+lasso.b.coef4 <- coef(cv.lasso.b4, s=cv.lasso.b4$lambda.min)
+exp(lasso.b.coef4)#Estimated Odds Ratios
+
