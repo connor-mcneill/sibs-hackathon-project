@@ -5,6 +5,9 @@ date: "7/10/2022"
 output: html_document
 ---
 
+age, diabetes,
+
+
 ## Stage 1: Background & Research Questions
 ### Load in data
 ```{r}
@@ -25,14 +28,15 @@ Cols <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NA
 #Turn to right type
 mi_compNEW = mi_comp
 
-for (i in Cols){
-  mi_compNEW[,i] <- as.factor(mi_comp[,i])
-}
+#for (i in Cols){
+#  mi_compNEW[,i] <- as.factor(mi_comp[,i])
+#}
 
 ```
 
 Turning some Ordinal attribute to binary
 ```{r}
+
 #Drop no needed response vars/complications
 other_response_vars <-  
   c('FIBR_PREDS', 'PREDS_TAH', 'JELUD_TAH',
@@ -40,105 +44,38 @@ other_response_vars <-
          'RAZRIV', 'DRESSLER', 'ZSN',
          'P_IM_STEN', 'LET_IS')
 
-mi_comp_clean <- mi_compNEW %>% 
+mi_comp_clean <- mi_comp %>% 
   select(-ID, -KFK_BLOOD, -IBS_NASL, -S_AD_KBRIG, -D_AD_KBRIG,
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
          -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
          -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
-         -82:-55,-53:50, -26:-13)
+         -82:-55,-53:50, -26:-13, -L_BLOOD, -DLIT_AG, -54)
 ```
 ```{r}
 #Combine variables & Turn some ordinal variables to binary
-mi_compNEW <- mi_compNEW %>%  mutate(NOT_NA_n = if_else(
+mi_comp_clean2 <- mi_comp_clean %>%  mutate(NOT_NA_n = if_else(
   NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
   0, 1))
 ```
 ```{r}
 #Drop the orginal columns that used for combination
-mi_comp_clean <- mi_compNEW %>% 
-  select(-NOT_NA_1_n, -NOT_NA_2_n, -NOT_NA_3_n)
-```
-
-```{r}
-#head(mi_comp)
-#tail(mi_comp)
-str(mi_comp) #Display the structure of a dataset. Gives data type, dimensions, column names, and data type within columns
-
-
-```
-- Still need more understanding of the variables.
-- Assume all explanatory/covariates measured after 3rd day of hospitalization.
-- Need to change variables to easier writing. Ex. NOT mi_comp$age --> age. Since there are 124 variables (111 covariates, 12 complications, 1 ID), need a FOR LOOP to do that? ANSWER: NOPE! in lm(), just add data=mi_comp option!
-- Change variable to correct type so analysis.
-- Maybe would help to create own variable?
-
-
-## Stage 2: Descriptive Analysis
-
-### EDA
-
-```{r}
-#library(GGally)
-#Problem is how to deal with missing data before do all pairs
-#ggpairs(mi_comp,upper = list(continuous = wrap("cor", size = 2.5)),lower = list(continuous = "smooth"))
-#also based on Descriptive Statistics.pdf, the Chronic heart failure (ZSN) has highest prob of complication!!! (focus on this response var most?!)
-```
-- How to split data that one part to train and another do what? ANSWER: LASSO - see Hughes-Oliver 7/12/2022 Notes & Lab!
-- This is where visualization happens
-- Remember dealing with missing data.
-- Rare complication, rare event → THEN less likely to be a useful reponse varible????
-- Think for some BOMB Visualization
-```{r}
-#cleaning data
-#mi_compNEW.clean = na.omit(mi_compNEW); dim(mi_compNEW.clean) #0 observation????
-```
-```{r}
-#find which variable that has a LOT of missing values to delete so above won't be 0 abs.
-for (i in names(mi_compNEW)){
-  print(i)
-  print(sum(is.na(mi_compNEW[i])))
-}
-```
-```{r}
-#subset the dataset to delete those columns with a lot of NAs
-drop <- c("IBS_NASL", "S_AD_KBRIG", "D_AD_KBRIG","KFK_BLOOD")
-mi_compNEW.subset = mi_compNEW[, !(names(mi_compNEW) %in% drop)]
-
-dim(mi_compNEW.subset) #NOW: 1700  120
+#mi_comp_clean <- mi_compNEW %>% 
+#  select(-NOT_NA_1_n, -NOT_NA_2_n, -NOT_NA_3_n)
 ```
 
 
-```{r}
-#Further modify NA of the dataset:
-mi_compNEW.subset2 = na.omit(mi_compNEW.subset)
-dim(mi_compNEW.subset2)#still deleting TOO many rows :(
-
-#Look further how to deal with missing data:
-#https://towardsdatascience.com/smart-handling-of-missing-data-in-r-6425f8a559f2
-##########FIND HOW MANY MAXIMUM EXPLANATORY VAR MICE CAN TAKE!!
-```
-#### More exploration of missing data
-```{r}
-library(naniar)
-# Which variables contain the most missing variables?
-gg_miss_var(mi_compNEW)
-# Where are missings located?
-vis_miss(mi_compNEW) + theme(axis.text.x = element_text(angle=80))
-# Which combinations of variables occur to be missing together?
-gg_miss_upset(mi_compNEW)
-```
 ```{r}
 # ANSWER: multiple imputation by chained equations (MICE) is flexible b/c use remaining info in data to create a model that predicts what could have been recorded to fill in blanks. Fill in the missing values multiple times and create several complete datasets before we pool the results to arrive at more realistic results. 
 library(mice)
 
 #save variables that are at least somewhat correlated with r>0.25 with it.
-pred_mat <- quickpred(mi_compNEW, mincor = 0.25)
+pred_mat <- quickpred(mi_comp_clean2, mincor = 0.25)
 ```
 ```{r}
 #run actual imputation procedure 10 times, set a seed, select a method and use the prediction matrix on our original dataset.
 
 #mice
-nhanes_multimp <- mice(mi_compNEW, m=10,meth='pmm', seed = 5, predictorMatrix = pred_mat)
+nhanes_multimp <- mice(mi_comp_clean2, m=10,meth='pmm', seed = 5, predictorMatrix = pred_mat)
 
 #Run regresson each of the 10 imputed datasets and pool the results in the end. PROBLEM: Don't know what model to use?! In a loop: missing data then model, model then missing data????
 
