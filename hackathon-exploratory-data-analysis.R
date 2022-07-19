@@ -1,6 +1,7 @@
 # Load in datasets
 load('data-files/mi_comp_data_original.RData')
 load('data-files/mi_comp_data_str.RData')
+load('data-files/mi_comp_data_cleaned.Rdata')
 
 # Load in Libraries
 # install.packages("corrplot")
@@ -52,96 +53,96 @@ corr_plot <- ggcorrplot(res, method='circle')
 #  ggplot() +
 #  geom_bar(aes(x=REC_IM, fill=SEX), position='fill')
 
-summary(glm(REC_IM ~ DLIT_AG, family='binomial', data=mi_comp))
+#summary(glm(REC_IM ~ DLIT_AG, family='binomial', data=mi_comp))
 
 # DLIT_AG appears significant. Will need to look at missing data.
-mi_comp %>% 
-  ggplot() +
-  geom_boxplot(aes(y=DLIT_AG, x=factor(REC_IM), fill=factor(REC_IM)))
+#mi_comp %>% 
+#  ggplot() +
+#  geom_boxplot(aes(y=DLIT_AG, x=factor(REC_IM), fill=factor(REC_IM)))
 
 #table(mi_comp_chr$DLIT_AG, mi_comp_chr$REC_IM)
 
 # ritm_ecg_p_07 may be significant
-prop.test(x=c(44, 309), n=c(44+95, 1409))
+#prop.test(x=c(44, 309), n=c(44+95, 1409))
 
-table(mi_comp_chr$ritm_ecg_p_07, mi_comp_chr$REC_IM)
+#table(mi_comp_chr$ritm_ecg_p_07, mi_comp_chr$REC_IM)
 
-mi_comp_chr$SEX %>% head()
-mi_comp$SEX %>% head() 
+#mi_comp_chr$SEX %>% head()
+#mi_comp$SEX %>% head() 
 
-mi_comp_chr %>% 
-  ggplot() +
-  geom_boxplot(aes(y=L_BLOOD, x=REC_IM, fill=REC_IM)) + 
-  scale_y_log10()
-
-
-lblood.model <- glm(REC_IM ~ L_BLOOD, data=mi_comp, family='binomial')
-summary(lblood.model)
-
-table(mi_comp_chr$n_p_ecg_p_12, mi_comp_chr$REC_IM)
-prop.test(x=c(5,73), n=c(140, 1445))
-
-table(mi_comp_chr$endocr_01, mi_comp_chr$REC_IM)
-prop.test(x=c(31,197), n=c(31+126, 197+1335))
-
-table(mi_comp_chr$SEX, mi_comp_chr$REC_IM)
-prop.test(x=c(75,84), n=c(75+560, 981+84))
-75/(75+560)
-84/(84+981)
-
-table(mi_comp_chr$B_BLOK_S_n, mi_comp_chr$REC_IM)
-prop.test(x=c(20, 195), n=c(138+20, 1336+195))
+#mi_comp_chr %>% 
+#  ggplot() +
+#  geom_boxplot(aes(y=L_BLOOD, x=REC_IM, fill=REC_IM)) + 
+#  scale_y_log10()
 
 
-ggplot() +
-  geom_bar(aes(fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), position='fill') +
-  labs(x='STENOK_AN', y='Proportion', fill='REC_IM')
+#lblood.model <- glm(REC_IM ~ L_BLOOD, data=mi_comp, family='binomial')
+#summary(lblood.model)
 
-ggplot() +
-  geom_boxplot(aes(y=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), show.legend=FALSE) +
-  labs(x='STENOK_AN', y='REC_IM', fill='REC_IM')
+#table(mi_comp_chr$n_p_ecg_p_12, mi_comp_chr$REC_IM)
+#prop.test(x=c(5,73), n=c(140, 1445))
 
-mi_comp_chr %>% 
-  remove_missing(vars=c('STENOK_AN')) %>% 
-  ggplot() +
-  geom_bar(aes(x=STENOK_AN, fill=factor(REC_IM)), show.legend=FALSE) +
-  facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
-  labs(x = 'Exertional AP Time Period (Years Since)')
+#table(mi_comp_chr$endocr_01, mi_comp_chr$REC_IM)
+#prop.test(x=c(31,197), n=c(31+126, 197+1335))
 
-labels <- c(
-  `No` = 'No Rec MI',
-  `Yes` = 'Rec MI' )
-)
+#table(mi_comp_chr$SEX, mi_comp_chr$REC_IM)
+#prop.test(x=c(75,84), n=c(75+560, 981+84))
+#75/(75+560)
+#84/(84+981)
 
-mi_comp_chr %>% 
-  remove_missing(vars=c('AGE')) %>% 
-  ggplot() +
-  geom_histogram(aes(x=AGE, fill=factor(REC_IM)), bins=10, show.legend=FALSE) +
-  facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
-  labs(x = 'Age (Years)')
+#table(mi_comp_chr$B_BLOK_S_n, mi_comp_chr$REC_IM)
+#prop.test(x=c(20, 195), n=c(138+20, 1336+195))
 
-mi_comp_chr %>% 
-  remove_missing(vars=c('AGE')) %>% 
-  ggplot() +
-  geom_boxplot(aes(y=REC_IM, x=AGE, fill=REC_IM), show.legend=FALSE) +
-  labs(y='Recurrent MI', x='Age (Years)') 
 
-step_pred_corr <- mi_comp_clean %>% 
-  select(AGE, STENOK_AN, endocr_01, zab_leg_01, GT_POST,
-         lat_im, R_AB_3_n, NA_R_2_n, ANT_CA_S_n, GEPAR_S_n,
-         TRENT_S_n) %>% 
-  cor()
+#ggplot() +
+#  geom_bar(aes(fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), position='fill') +
+#  labs(x='STENOK_AN', y='Proportion', fill='REC_IM')
 
-spc_names <- c("Age", "Exertional AP", "DM",
-               "COPD", "VTech", "Lateral MI",
-               "Pain Day 3", "Opioids Day 2", "Ca Blockers",
-               'Heparin', 'Trental')
-rownames(step_pred_corr) <- spc_names
-colnames(step_pred_corr) <- spc_names
-
-corrplot(step_pred_corr, type='upper', order='hclust',
-         tl.col='black', tl.srt=45)
-
-table(mi_comp_chr$REC_IM, mi_comp_chr$LET_IS)
-
-table
+# ggplot() +
+#   geom_boxplot(aes(y=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), show.legend=FALSE) +
+#   labs(x='STENOK_AN', y='REC_IM', fill='REC_IM')
+# 
+# mi_comp_chr %>% 
+#   remove_missing(vars=c('STENOK_AN')) %>% 
+#   ggplot() +
+#   geom_bar(aes(x=STENOK_AN, fill=factor(REC_IM)), show.legend=FALSE) +
+#   facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+#   labs(x = 'Exertional AP Time Period (Years Since)')
+# 
+# labels <- c(
+#   `No` = 'No Rec MI',
+#   `Yes` = 'Rec MI' )
+# 
+# 
+# mi_comp_chr %>% 
+#   remove_missing(vars=c('AGE')) %>% 
+#   ggplot() +
+#   geom_histogram(aes(x=AGE, fill=factor(REC_IM)), bins=10, show.legend=FALSE) +
+#   facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+#   labs(x = 'Age (Years)')
+# 
+# mi_comp_chr %>% 
+#   remove_missing(vars=c('AGE')) %>% 
+#   ggplot() +
+#   geom_boxplot(aes(y=REC_IM, x=AGE, fill=REC_IM), show.legend=FALSE) +
+#   labs(y='Recurrent MI', x='Age (Years)') 
+# 
+# step_pred_corr <- mi_comp_clean %>% 
+#   select(AGE, STENOK_AN, endocr_01, zab_leg_01, GT_POST,
+#          lat_im, R_AB_3_n, NA_R_2_n, ANT_CA_S_n, GEPAR_S_n,
+#          TRENT_S_n) %>% 
+#   cor()
+# 
+# spc_names <- c("Age", "Exertional AP", "DM",
+#                "COPD", "VTech", "Lateral MI",
+#                "Pain Day 3", "Opioids Day 2", "Ca Blockers",
+#                'Heparin', 'Trental')
+# rownames(step_pred_corr) <- spc_names
+# colnames(step_pred_corr) <- spc_names
+# 
+# corrplot(step_pred_corr, type='upper', order='hclust',
+#          tl.col='black', tl.srt=45)
+# 
+# table(mi_comp_chr$REC_IM, mi_comp_chr$LET_IS)
+# 
+# table
