@@ -32,10 +32,7 @@ str(mi_comp) #Display the structure of a dataset. Gives data type, dimensions, c
 #Makecorrect variable type (categorical)
 
 #################Ordinal attribute to NUMERICAL so can look at Odds ratio################
-Cols <- c("ID", "SEX",	"IBS_NASL", "SIM_GIPERT",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",		"IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
-
-#################Ordinal attribute to CATEGORICAL so can look at Odds ratio################
-Cols <- c("ID", "SEX",	"IBS_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
+ColsNUM <- c("ID", "SEX",	"IBS_NASL", "SIM_GIPERT",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",		"IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
 
 ###########HOW TO CHECK IF VARIABLE ARE SPELLED RIGHT##################
 #Cols %in% names(mi_comp)
@@ -52,13 +49,9 @@ Cols <- c("ID", "SEX",	"IBS_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NA
 #}
 mi_compNEW = mi_comp
 
-for (i in Cols){
+for (i in ColsNUM){
   mi_compNEW[,i] <- as.factor(mi_comp[,i])
 }
-
-#mi_comp[,names] <- as.factor(mi_comp[, names])
-#Error in `$<-.data.frame`(`*tmp*`, data, value = integer(0)) : 
-#  replacement has 0 rows, data has 1700
 
 
 #variable that can be numerical OR cumulative dummy coding:
@@ -72,13 +65,21 @@ for (i in Cols){
 str(mi_compNEW)
 
 ```
+```{r}
+#################Ordinal attribute to CATEGORICAL so can look at Odds ratio################
+ColsCAT <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
+
+mi_compNEW2 = mi_comp
+for (i in ColsCAT){
+  mi_compNEW2[,i] <- as.factor(mi_comp[,i])
+}
+```
 - Still need more understanding of the variables.
 - Assume all explanatory/covariates measured after 3rd day of hospitalization.
 - Need to change variables to easier writing. Ex. NOT mi_comp$age --> age. Since there are 124 variables (111 covariates, 12 complications, 1 ID), need a FOR LOOP to do that? ANSWER: NOPE! in lm(), just add data=mi_comp option!
 - Change variable to correct type so analysis.
 - Maybe would help to create own variable?
-```{r}
-```
+
 
 ## Stage 2: Descriptive Analysis
 
@@ -97,7 +98,7 @@ str(mi_compNEW)
 - Think for some BOMB Visualization
 ```{r}
 #cleaning data
-mi_compNEW.clean = na.omit(mi_compNEW); dim(mi_compNEW.clean) #0 observation????
+#mi_compNEW.clean = na.omit(mi_compNEW); dim(mi_compNEW.clean) #0 observation????
 ```
 ```{r}
 #find which variable that has a LOT of missing values to delete so above won't be 0 abs.
