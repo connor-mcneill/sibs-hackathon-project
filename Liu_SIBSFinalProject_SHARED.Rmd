@@ -10,8 +10,6 @@ output: html_document
 ```{r}
 library(tidyverse)
 mi_comp <- read.csv('D:/NCSU/Summer2022/SIBS/SIBS_HackAThon/Myocardial infarction complications Database.csv', check.names = TRUE) #make sure the variable imported valid for R without special characters/symbols like tabs
-
-#TRY
 ```
 
 ```{r}
