@@ -19,12 +19,28 @@ summary(mi_comp)
 ```
 7/19/2022 TEAM CONCLUSION
 ```{r}
-NEWCols <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
+Cols <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
 ```
+```{r}
+#Turn to right type
+mi_compNEW = mi_comp
+
+for (i in Cols){
+  mi_compNEW[,i] <- as.factor(mi_comp[,i])
+}
+
+```
+
 Turning some Ordinal attribute to binary
 ```{r}
 #Drop no needed response vars/complications
-mi_comp_clean <- mi_comp %>% 
+other_response_vars <-  
+  c('FIBR_PREDS', 'PREDS_TAH', 'JELUD_TAH',
+         'FIBR_JELUD', 'A_V_BLOK', 'OTEK_LANC',
+         'RAZRIV', 'DRESSLER', 'ZSN',
+         'P_IM_STEN', 'LET_IS')
+
+mi_comp_clean <- mi_compNEW %>% 
   select(-ID, -KFK_BLOOD, -IBS_NASL, -S_AD_KBRIG, -D_AD_KBRIG,
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
          -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
@@ -34,7 +50,11 @@ mi_comp_clean <- mi_comp %>%
 ```
 ```{r}
 #Combine variables & Turn some ordinal variables to binary
+mi_compNEW <- mi_compNEW %>%  mutate(NOT_NA_n = if_else(
+  NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
+  0, 1))
 ```
+
 
 
 ```{r}
@@ -42,57 +62,7 @@ mi_comp_clean <- mi_comp %>%
 #tail(mi_comp)
 str(mi_comp) #Display the structure of a dataset. Gives data type, dimensions, column names, and data type within columns
 
-###need to change to correct type???????? Some categorical some binary
-#mi_compNEW <- for(i in 49:85){
-#  as.factor(mi_comp)
-#}
 
-#mi_compNEW <- as.binary()
-
-#Makecorrect variable type (categorical)
-
-#################Ordinal attribute to NUMERICAL so can look at Odds ratio################
-ColsNUM <- c("ID", "SEX",	"IBS_NASL", "SIM_GIPERT",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",		"IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
-
-###########HOW TO CHECK IF VARIABLE ARE SPELLED RIGHT##################
-#Cols %in% names(mi_comp)
-#Cols[Cols %in% names(mi_comp)==FALSE] --> to get which one that is wrong 
-##########################################################################
-
-#namesNEW <- function(data){
-#  mi_comp$data <- as.factor(mi_comp$data)
-#}
-
-
-#mi_compNEW <- for (i in names){
-#  namesNEW(i)
-#}
-mi_compNEW = mi_comp
-
-for (i in ColsNUM){
-  mi_compNEW[,i] <- as.factor(mi_comp[,i])
-}
-
-
-#variable that can be numerical OR cumulative dummy coding:
-#INF_ANAM	STENOK_AN FK_STENOK IBS_POST GB DLIT_AG 
-#ant_im	lat_im	inf_im	post_im TIME_B_S
-####Possible source of error!!! Ordinary attribute are not accurate, only shows order!!!
-
-#numerical variables:
-#S_AD_KBRIG	D_AD_KBRIG	S_AD_ORIT	D_AD_ORIT K_BLOOD NA_BLOOD	ALT_BLOOD AST_BLOOD	KFK_BLOOD	L_BLOOD	ROE
-#######mi_comp[names] <- lapply(mi_comp[names], factor)
-str(mi_compNEW)
-
-```
-```{r}
-#################Ordinal attribute to CATEGORICAL so can look at Odds ratio################
-ColsCAT <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
-
-mi_compNEW2 = mi_comp
-for (i in ColsCAT){
-  mi_compNEW2[,i] <- as.factor(mi_comp[,i])
-}
 ```
 - Still need more understanding of the variables.
 - Assume all explanatory/covariates measured after 3rd day of hospitalization.
