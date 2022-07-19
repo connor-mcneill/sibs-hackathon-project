@@ -54,6 +54,10 @@ corrplot(res, type='upper', order='hclust',
 
 # Inferential Analysis
 
+LASSO Logistic Regression Model because
+- Reduce number of variables (LASSO)
+- Response variable is binary (Logistic Regression)
+
 ## Model
 
 $$ REC\_IM = \beta_0 + \beta_1 x_1 $$
