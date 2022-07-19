@@ -45,8 +45,7 @@ mi_comp_clean <- mi_compNEW %>%
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
          -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
          -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
-         -82:-55,-53:50, -26:-13) %>% 
-  remove_missing()
+         -82:-55,-53:50, -26:-13)
 ```
 ```{r}
 #Combine variables & Turn some ordinal variables to binary
@@ -54,8 +53,11 @@ mi_compNEW <- mi_compNEW %>%  mutate(NOT_NA_n = if_else(
   NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
   0, 1))
 ```
-
-
+```{r}
+#Drop the orginal columns that used for combination
+mi_comp_clean <- mi_compNEW %>% 
+  select(-NOT_NA_1_n, -NOT_NA_2_n, -NOT_NA_3_n)
+```
 
 ```{r}
 #head(mi_comp)
