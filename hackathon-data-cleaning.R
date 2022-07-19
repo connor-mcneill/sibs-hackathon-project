@@ -1,10 +1,9 @@
 # Load in Libraries
 library(tidyverse)
-install.packages('mice')
 library(mice)
 
 # Import Data
-mi_comp <- read.csv("C:/Users/conno/Downloads/Myocardial infarction complications Database.csv")
+mi_comp <- read.csv("D:/NCSU/Summer2022/SIBS/SIBS_HackAThon/Myocardial infarction complications Database.csv")
 # save(mi_comp,file='mi_comp_data_original.RData')
 md.pairs(mi_comp)
 
@@ -54,7 +53,7 @@ step(model)
 step_model2 <- MASS::stepAIC()
 
 # Option 1: Reduce dimensionality of ordinal med variables
-mi_comp_clean <- mi_comp_clean %>%  
+mi_comp_clean1 <- mi_comp_clean %>%  
   mutate(NOT_NA_n = if_else(
   NOT_NA_1_n == 0 & NOT_NA_2_n == 0 & NOT_NA_3_n == 0,
   0, 1)) %>% 
@@ -66,7 +65,7 @@ mi_comp_clean <- mi_comp_clean %>%
   select(-NA_R_1_n, -NA_R_2_n, -NA_R_3_n)
   
 # Option 2: Make med variables binary
-mi_comp_clean <- mi_comp_clean %>% 
+mi_comp_clean2 <- mi_comp_clean %>% 
   mutate(NOT_NA_1_n = if_else(NOT_NA_1_n == 0, 0, 1),
          NOT_NA_2_n = if_else(NOT_NA_2_n == 0, 0, 1),
          NOT_NA_3_n = if_else(NOT_NA_3_n == 0, 0, 1),
@@ -86,3 +85,133 @@ summary(step_model)
 summary(glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
             GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
               GEPAR_S_n + TRENT_S_n, family='binomial', data=mi_comp_clean))
+
+
+#--------------------LASSO LOGISTIC REGRESSION----------------------------
+library(caret)
+library(glmnet)
+set.seed(123)
+
+
+#which( colnames(mi_comp_clean1)=="REC_IM" )
+#40
+
+###############LASSO Reg for option1: Reduce dimensionality of ordinal med variables############
+inTrain <- as.vector(createDataPartition(mi_comp_clean1[,40],p=0.8,list=FALSE, times=1))
+dTrain <- mi_comp_clean1[inTrain,]; dim(dTrain)
+dTest <- mi_comp_clean1[-inTrain,]; dim(dTest)
+
+#gather response var into vectors
+yTrain <- dTrain[,40]
+xTrain <- as.matrix(dTrain[,-40])
+yTest <- dTest[,40]
+xTest <- as.matrix(dTest[,-40])
+
+#To fit a lasso logistic regression model, the only modifications needed are to specify a factor response variable and to include family="binomial" in the glmnet call:
+fit.lasso.b <- glmnet(xTrain, yTrain, alpha=1, standardize=TRUE, family="binomial")
+plot(fit.lasso.b, label=TRUE, xvar="lambda")
+
+
+set.seed(123)
+cv.lasso.b <- cv.glmnet(xTrain, yTrain, alpha=1, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b)
+
+cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+
+cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+
+#Estimated Odds Ratios
+lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min)
+exp(lasso.b.coef)#Estimated Odds Ratios
+#~~~~~~~~~~~~~BRUH WHAT
+
+
+
+#############LASSO Reg for option2: Make med variables binary#############
+set.seed(777)
+#LASSO Reg for option2
+inTrain2 <- as.vector(createDataPartition(mi_comp_clean2[,40],p=0.8,list=FALSE, times=1))
+dTrain2 <- mi_comp_clean2[inTrain2,]; dim(dTrain2)
+dTest2 <- mi_comp_clean2[-inTrain2,]; dim(dTest2)
+
+#gather response var into vectors
+yTrain2 <- dTrain2[,40]
+xTrain2 <- as.matrix(dTrain2[,-40])
+yTest2 <- dTest2[,40]
+xTest2 <- as.matrix(dTest2[,-40])
+
+fit.lasso.b2 <- glmnet(xTrain2, yTrain2, alpha=1, standardize=TRUE, family="binomial")
+plot(fit.lasso.b2, label=TRUE, xvar="lambda")
+
+set.seed(777)
+cv.lasso.b2 <- cv.glmnet(xTrain2, yTrain2, alpha=1, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b2)
+
+#Estimating Odds Ratio
+cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+
+cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+
+#Estimated Odds Ratios
+lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min)
+exp(lasso.b.coef2)#Estimated Odds Ratios
+##~~~~~~~~~~LOOKS BETTER
+
+###############Ridge Reg for option1: Reduce dimensionality of ordinal med variables############
+inTrain <- as.vector(createDataPartition(mi_comp_clean1[,40],p=0.8,list=FALSE, times=1))
+dTrain <- mi_comp_clean1[inTrain,]; dim(dTrain)
+dTest <- mi_comp_clean1[-inTrain,]; dim(dTest)
+
+#gather response var into vectors
+yTrain <- dTrain[,40]
+xTrain <- as.matrix(dTrain[,-40])
+yTest <- dTest[,40]
+xTest <- as.matrix(dTest[,-40])
+
+#To fit a lasso logistic regression model, the only modifications needed are to specify a factor response variable and to include family="binomial" in the glmnet call:
+fit.lasso.b <- glmnet(xTrain, yTrain, alpha=0, standardize=TRUE, family="binomial")
+plot(fit.lasso.b, label=TRUE, xvar="lambda")
+
+
+set.seed(123)
+cv.lasso.b <- cv.glmnet(xTrain, yTrain, alpha=0, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b)
+
+cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+
+cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+
+#Estimated Odds Ratios
+lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min)
+exp(lasso.b.coef)#Estimated Odds Ratios
+
+
+
+#############LASSO Reg for option2: Make med variables binary#############
+set.seed(777)
+#LASSO Reg for option2
+inTrain2 <- as.vector(createDataPartition(mi_comp_clean2[,40],p=0.8,list=FALSE, times=1))
+dTrain2 <- mi_comp_clean2[inTrain2,]; dim(dTrain2)
+dTest2 <- mi_comp_clean2[-inTrain2,]; dim(dTest2)
+
+#gather response var into vectors
+yTrain2 <- dTrain2[,40]
+xTrain2 <- as.matrix(dTrain2[,-40])
+yTest2 <- dTest2[,40]
+xTest2 <- as.matrix(dTest2[,-40])
+
+fit.lasso.b2 <- glmnet(xTrain2, yTrain2, alpha=0, standardize=TRUE, family="binomial")
+plot(fit.lasso.b2, label=TRUE, xvar="lambda")
+
+set.seed(777)
+cv.lasso.b2 <- cv.glmnet(xTrain2, yTrain2, alpha=0, standardize=TRUE, family="binomial", nfolds=10)
+plot(cv.lasso.b2)
+
+#Estimating Odds Ratio
+cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+
+cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+
+#Estimated Odds Ratios
+lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min)
+exp(lasso.b.coef2)#Estimated Odds Ratios
