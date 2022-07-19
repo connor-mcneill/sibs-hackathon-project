@@ -94,4 +94,54 @@ prop.test(x=c(20, 195), n=c(138+20, 1336+195))
 
 
 ggplot() +
-  geom_boxplot(aes(x=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, y=mi_comp$STENOK_AN))
+  geom_bar(aes(fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), position='fill') +
+  labs(x='STENOK_AN', y='Proportion', fill='REC_IM')
+
+ggplot() +
+  geom_boxplot(aes(y=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), show.legend=FALSE) +
+  labs(x='STENOK_AN', y='REC_IM', fill='REC_IM')
+
+mi_comp_chr %>% 
+  remove_missing(vars=c('STENOK_AN')) %>% 
+  ggplot() +
+  geom_bar(aes(x=STENOK_AN, fill=factor(REC_IM)), show.legend=FALSE) +
+  facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+  labs(x = 'Exertional AP Time Period (Years Since)')
+
+labels <- c(
+  `No` = 'No Rec MI',
+  `Yes` = 'Rec MI' )
+)
+
+mi_comp_chr %>% 
+  remove_missing(vars=c('AGE')) %>% 
+  ggplot() +
+  geom_histogram(aes(x=AGE, fill=factor(REC_IM)), bins=10, show.legend=FALSE) +
+  facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+  labs(x = 'Age (Years)')
+
+mi_comp_chr %>% 
+  remove_missing(vars=c('AGE')) %>% 
+  ggplot() +
+  geom_boxplot(aes(y=REC_IM, x=AGE, fill=REC_IM), show.legend=FALSE) +
+  labs(y='Recurrent MI', x='Age (Years)') 
+
+step_pred_corr <- mi_comp_clean %>% 
+  select(AGE, STENOK_AN, endocr_01, zab_leg_01, GT_POST,
+         lat_im, R_AB_3_n, NA_R_2_n, ANT_CA_S_n, GEPAR_S_n,
+         TRENT_S_n) %>% 
+  cor()
+
+spc_names <- c("Age", "Exertional AP", "DM",
+               "COPD", "VTech", "Lateral MI",
+               "Pain Day 3", "Opioids Day 2", "Ca Blockers",
+               'Heparin', 'Trental')
+rownames(step_pred_corr) <- spc_names
+colnames(step_pred_corr) <- spc_names
+
+corrplot(step_pred_corr, type='upper', order='hclust',
+         tl.col='black', tl.srt=45)
+
+table(mi_comp_chr$REC_IM, mi_comp_chr$LET_IS)
+
+table

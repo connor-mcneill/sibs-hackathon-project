@@ -18,13 +18,13 @@ mi_comp_chr <- mi_comp %>%
     INF_ANAM == 2 ~ '2',
     INF_ANAM == 3 ~ '3+')) %>% 
   mutate(STENOK_AN=case_when(
-    STENOK_AN == 0 ~ 'Never',
-    STENOK_AN == 1 ~ '< 1 year',
-    STENOK_AN == 2 ~ '1 year',
-    STENOK_AN == 3 ~ '2 years',
-    STENOK_AN == 4 ~ '3 years',
-    STENOK_AN == 5 ~ '4-5 years',
-    STENOK_AN == 6 ~ '> 5 years')) %>% 
+    STENOK_AN == 0 ~ '~0',
+    STENOK_AN == 1 ~ '<1',
+    STENOK_AN == 2 ~ '1',
+    STENOK_AN == 3 ~ '2',
+    STENOK_AN == 4 ~ '3',
+    STENOK_AN == 5 ~ '4-5',
+    STENOK_AN == 6 ~ '5+')) %>% 
   mutate(FK_STENOK=case_when(
     FK_STENOK == 0 ~ 'None',
     FK_STENOK == 1 ~ 'I FC',

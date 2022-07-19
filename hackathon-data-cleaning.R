@@ -51,6 +51,8 @@ null_model <- glm(REC_IM ~ 1, data=mi_comp_clean, family='binomial')
 step_model <- MASS::stepAIC(model, direction='both')
 step(model)
 
+step_model2 <- MASS::stepAIC()
+
 # Option 1: Reduce dimensionality of ordinal med variables
 mi_comp_clean <- mi_comp_clean %>%  
   mutate(NOT_NA_n = if_else(
