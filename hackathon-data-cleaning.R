@@ -121,7 +121,7 @@ cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when l
 cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min)
+lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
 exp(lasso.b.coef)#Estimated Odds Ratios
 #~~~~~~~~~~~~~BRUH WHAT
 
@@ -153,9 +153,9 @@ cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when 
 cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min)
+lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
 exp(lasso.b.coef2)#Estimated Odds Ratios
-##~~~~~~~~~~LOOKS BETTER
+##~~~~~~~~~~LOOKS BETTER, 5 VARIABLE IS LITTLE LESS
 
 ###############Elsatic Net Reg for option1: Reduce dimensionality of ordinal med variables############
 inTrain3 <- as.vector(createDataPartition(mi_comp_clean1[,40],p=0.8,list=FALSE, times=1))
@@ -182,7 +182,7 @@ cv.lasso.b3$lambda.min #Average mean-squared prediction error is minimized when 
 cv.lasso.b3$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 48.89813 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef3 <- coef(cv.lasso.b3, s=cv.lasso.b3$lambda.min)
+lasso.b.coef3 <- coef(cv.lasso.b3, s=cv.lasso.b3$lambda.1se)
 exp(lasso.b.coef3)#Estimated Odds Ratios
 
 
@@ -213,6 +213,7 @@ cv.lasso.b4$lambda.min #Average mean-squared prediction error is minimized when 
 cv.lasso.b4$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef4 <- coef(cv.lasso.b4, s=cv.lasso.b4$lambda.min)
-exp(lasso.b.coef4)#Estimated Odds Ratios
+lasso.b.coef4 <- coef(cv.lasso.b4, s=cv.lasso.b4$lambda.1se)
+lasso.b.coef4#Estimated Odds Ratios
+##~~~~~~~~~Better! 9 VARIABLE LOOKS RIGHT.
 
