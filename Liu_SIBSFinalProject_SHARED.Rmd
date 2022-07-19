@@ -17,6 +17,26 @@ summary(mi_comp)
 #when doing lm(), ADD na.action=na.omit --> exclude from the analysis any subject who does not have all the variables necessary to fit a model
 #Logistic regression model would work better since a lot of categorical var.
 ```
+7/19/2022 TEAM CONCLUSION
+```{r}
+NEWCols <- c("ID", "SEX",	"INF_ANAM",  "STENOK_AN", "FK_STENOK", "IBS_POST","IBS_NASL", "GB","SIM_GIPERT","DLIT_AG",	"ZSN_A",	"nr_11", "nr_01",	"nr_02",	"nr_03",	"nr_04",	"nr_07",	"nr_08",	"np_01",	"np_04",	"np_05",	"np_07",	"np_08"	,"np_09",	"np_10"	,	"endocr_02",	"endocr_03",	"zab_leg_01",	"zab_leg_02",	"zab_leg_03",	"zab_leg_04",	"zab_leg_06",		"O_L_POST",	"K_SH_POST",	"MP_TP_POST",	"SVT_POST",	"GT_POST",	"FIB_G_POST",	"ant_im",	"lat_im","inf_im","post_im","IM_PG_P",	"ritm_ecg_p_01",	"ritm_ecg_p_02",	"ritm_ecg_p_04",	"ritm_ecg_p_06",	"ritm_ecg_p_07",	"ritm_ecg_p_08",	"n_r_ecg_p_01",	"n_r_ecg_p_02",	"n_r_ecg_p_03",	"n_r_ecg_p_04",	"n_r_ecg_p_05",	"n_r_ecg_p_06",	"n_r_ecg_p_08",	"n_r_ecg_p_09",	"n_r_ecg_p_10",	"n_p_ecg_p_01",	"n_p_ecg_p_03",	"n_p_ecg_p_04",	"n_p_ecg_p_05",	"n_p_ecg_p_06",	"n_p_ecg_p_07",	"n_p_ecg_p_08",	"n_p_ecg_p_09",	"n_p_ecg_p_10",	"n_p_ecg_p_11",	"n_p_ecg_p_12",	"fibr_ter_01",	"fibr_ter_02",	"fibr_ter_03",	"fibr_ter_05",	"fibr_ter_06",	"fibr_ter_07",	"fibr_ter_08",	"GIPO_K",		"GIPER_NA",	"TIME_B_S","NA_KB",	"NOT_NA_KB",	"LID_KB",	"NITR_S",	"NOT_NA_1_n",	"LID_S_n",	"B_BLOK_S_n",	"ANT_CA_S_n",	"GEPAR_S_n",	"ASP_S_n",	"TIKL_S_n",	"TRENT_S_n",	"FIBR_PREDS",	"PREDS_TAH",	"JELUD_TAH",	"FIBR_JELUD",	"A_V_BLOK",	"OTEK_LANC",	"RAZRIV",	"DRESSLER",	"ZSN",	"REC_IM",	"P_IM_STEN",	"LET_IS")
+```
+Turning some Ordinal attribute to binary
+```{r}
+#Drop no needed response vars/complications
+mi_comp_clean <- mi_comp %>% 
+  select(-ID, -KFK_BLOOD, -IBS_NASL, -S_AD_KBRIG, -D_AD_KBRIG,
+         -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
+         -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
+         -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
+         -82:-55,-53:50, -26:-13) %>% 
+  remove_missing()
+```
+```{r}
+#Combine variables & Turn some ordinal variables to binary
+```
+
+
 ```{r}
 #head(mi_comp)
 #tail(mi_comp)
