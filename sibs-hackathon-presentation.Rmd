@@ -66,6 +66,8 @@ Logistic regression is the basis
     - $>100$ covariates to begin
     
     - Several removed from consideration due to missingness
+    
+    - 
 
 ## Model Building
 

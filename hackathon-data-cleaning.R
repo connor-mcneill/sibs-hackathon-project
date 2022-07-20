@@ -3,12 +3,15 @@ library(tidyverse)
 library(mice)
 
 # Import Data
+load('data-files/mi_comp_data_original.RData')
 mi_comp <- read.csv("D:/NCSU/Summer2022/SIBS/SIBS_HackAThon/Myocardial infarction complications Database.csv")
 # save(mi_comp,file='mi_comp_data_original.RData')
 md.pairs(mi_comp)
 
 # Look at data structure
 str(mi_comp)
+
+# ---------------- Handle Missing Data -------------------
 
 # Examine Missing Data Summary
 na_list <- is.na(mi_comp) %>% 
@@ -37,21 +40,14 @@ mi_comp_clean <- mi_comp %>%
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
          -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
          -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
-         -82:-55, -53:-50, -26:-13, -L_BLOOD, -DLIT_AG, -54) %>% 
-  remove_missing()
+         -82:-55, -53:-50, -26:-13) %>%
+remove_missing()
 
 #save(mi_comp_clean, file='data-files/mi_comp_data_cleaned.RData')
 # Refactor Variables for Exploratory Analysis & Plots
 # Done in the data-refactor-string file
 
-model <- glm(REC_IM ~ ., family='binomial', data=mi_comp_clean)
-summary(model)
-null_model <- glm(REC_IM ~ 1, data=mi_comp_clean, family='binomial')
-step_model <- MASS::stepAIC(model, direction='both')
-step(model)
-
-step_model2 <- MASS::stepAIC()
-
+# --------------- Handle Ordinal Predictors -----------------
 # Option 1: Reduce dimensionality of ordinal med variables
 mi_comp_clean1 <- mi_comp_clean %>%  
   mutate(NOT_NA_n = if_else(
@@ -71,7 +67,23 @@ mi_comp_clean2 <- mi_comp_clean %>%
          NOT_NA_3_n = if_else(NOT_NA_3_n == 0, 0, 1),
          NA_R_1_n = if_else(NA_R_1_n == 0, 0, 1),
          NA_R_2_n = if_else(NA_R_2_n == 0, 0, 1),
-         NA_R_3_n = if_else(NA_R_3_n == 0, 0, 1))
+         NA_R_3_n = if_else(NA_R_3_n == 0, 0, 1),
+         GB = if_else(GB == 0, 0, 1),
+         ZSN_A = if_else(ZSN_A ==0, 0, 1),
+         ant_im =if_else(ant_im==0, 0, 1),
+         lat_im = if_else(lat_im==0, 0, 1),
+         post_im = if_else(post_im==0, 0, 1),
+         inf_im = if_else(inf_im==0,0,1))
+
+save(mi_comp_clean1, file='data-files/mi_comp_data_simple.RData')
+save(mi_comp_clean2, file='data-files/mi_comp_data_bin.RData')
+
+# --------------- Fit Logistic Regression Model ---------------------
+model <- glm(REC_IM ~ ., family='binomial', data=mi_comp_clean2)
+summary(model)
+null_model <- glm(REC_IM ~ 1, data=mi_comp_clean, family='binomial')
+step_model <- MASS::stepAIC(model, direction='both')
+step(model)
 
 step_data <- mi_comp %>% 
   select(AGE, STENOK_AN, endocr_01, endocr_03, zab_leg_01,
@@ -82,10 +94,14 @@ step_data <- mi_comp %>%
 
 # Look at models
 summary(step_model)
-summary(glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
-            GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
-              GEPAR_S_n + TRENT_S_n, family='binomial', data=mi_comp_clean))
+sink('model_summary.txt') sink()
+step_model2 <- glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
+                     GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
+                     GEPAR_S_n + TRENT_S_n, family='binomial', data=mi_comp_clean)
+summary(step_model2)
 library(corrplot)
+anova(step_model)
+drop1(step_model, test='LRT')
 step_cor <- cor(select(step_data, -REC_IM))
 corrplot(step_cor, type='upper', order='hclust',
          tl.col='black', tl.srt=45, method='square')
@@ -163,7 +179,7 @@ xTest2 <- as.matrix(dTest2[,-40])
 fit.lasso.b2 <- glmnet(xTrain2, yTrain2, alpha=1, standardize=TRUE, family="binomial")
 plot(fit.lasso.b2, label=TRUE, xvar="lambda")
 
-set.seed(777)
+set.seed(3201)
 cv.lasso.b2 <- cv.glmnet(xTrain2, yTrain2, alpha=1, standardize=TRUE, family="binomial", nfolds=10)
 plot(cv.lasso.b2)
 
@@ -173,7 +189,7 @@ cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when 
 cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
+lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.1se) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
 lasso.b.coef2 ######LESS ARE DROPPED THAN OPTION1
 #exp(lasso.b.coef2) #Estimated Odds Ratios
 #LOOKS BETTER, 5 VARIABLE IS LITTLE LESS
@@ -259,7 +275,7 @@ xTest4 <- as.matrix(dTest4[,-40])
 fit.lasso.b4 <- glmnet(xTrain4, yTrain4, alpha=0.5, standardize=TRUE, family="binomial")
 plot(fit.lasso.b4, label=TRUE, xvar="lambda")
 
-set.seed(777)
+set.seed(3201)
 cv.lasso.b4 <- cv.glmnet(xTrain4, yTrain4, alpha=0.5, standardize=TRUE, family="binomial", nfolds=10)
 plot(cv.lasso.b4)
 
