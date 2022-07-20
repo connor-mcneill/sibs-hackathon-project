@@ -120,13 +120,13 @@ fit.lasso.b <- glmnet(xTrain, yTrain, alpha=1, standardize=TRUE, family="binomia
 plot(fit.lasso.b, label=TRUE, xvar="lambda")
 
 
-set.seed(123)
+set.seed(777)
 cv.lasso.b <- cv.glmnet(xTrain, yTrain, alpha=1, standardize=TRUE, family="binomial", nfolds=10)
 plot(cv.lasso.b)
 
-cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01563434; this model includes 4 predictors
+cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
 
-cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.04774502 and includes 0 predictors
+cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
 lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min) # lambda.min --> if Cross Validataion Curve's second vertial line ends up with 0 variables.
@@ -217,7 +217,7 @@ fit.lasso.b3 <- glmnet(xTrain3, yTrain3, alpha=0.5, standardize=TRUE, family="bi
 plot(fit.lasso.b3, label=TRUE, xvar="lambda")
 
 
-set.seed(123)
+set.seed(777)
 cv.lasso.b3 <- cv.glmnet(xTrain3, yTrain3, alpha=0.5, standardize=TRUE, family="binomial", nfolds=10)
 plot(cv.lasso.b3)
 
@@ -232,12 +232,12 @@ lasso.b.coef3 ###########NO GOOD... EVERYTHING DROPPED.
 
 #~~~~~~ROC Elastic Net Option 1~~~~~~~~
 #FIRST, look at the estimated probabilities, and then convert these into"TRUE" or "FALSE":
-phat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.min, type="response")
-yhat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.min, type="class")
+phat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.1se, type="response")
+yhat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.1se, type="class")
 cbind(phat, yhat, yTest3[1:10], unname(dTest3[1:10,]))
 
 #SECOND,consider many ways to convert the estimated probabilities into TRUE or FALSE
-phat <- predict(cv.lasso.b3, newx=xTest3, s=cv.lasso.b3$lambda.min, type="response")
+phat <- predict(cv.lasso.b3, newx=xTest3, s=cv.lasso.b3$lambda.1se, type="response")
 #install.packages("ROCR")
 library(ROCR)
 perf <- ROCR::performance(ROCR::prediction(phat, yTest3), "tpr", "fpr")
