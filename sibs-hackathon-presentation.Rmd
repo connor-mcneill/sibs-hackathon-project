@@ -1,11 +1,13 @@
 ---
-title: "SIBS Hackathon Presentation"
+title: "Predicting the Risk of Recurrent MI"
+subtitle: 'SIBS Hackathon Presentation'
 author: "Kevin Krupa, Lucy Liu, Kendall McClellan, Connor McNeill"
 institute: "NCSU-Duke Summer Institute in Biostatistics"
 date: "July 21, 2022"
 output: 
-  beamer_presentation:
-    theme: 'Frankfurt'
+  beamer_presentation: 
+    theme: Frankfurt
+    keep_tex: yes
 #    colortheme: 'beaver'
 #    fonttheme: structurebold
     includes:
@@ -33,9 +35,13 @@ source('hackathon-exploratory-data-analysis.R',
 
 ## Research Question
 
-<!-- \begin{block}{Research Question} -->
-<!-- What can we measure to predict a risk of having another relapse? -->
-<!-- \end{block} -->
+\begin{block}{Question 1}
+What can we look at either during admission or the hospital stay in patients post-heart attack (myocardial infarction) to predict the risk of having a relapse?
+\end{block}
+
+\begin{block}{Question 2}
+Which risk prediction model is best at predicting a recurrent heart attack?
+\end{block}
 
 # Descriptive Analysis
 
@@ -49,14 +55,33 @@ corrplot(res, type='upper', order='hclust',
 
 # Inferential Analysis
 
-## Intro
-LASSO Logistic Regression Model because
-- Reduce number of variables (LASSO)
-- Response variable is binary (Logistic Regression)
+## Model Building
+
+Logistic regression is the basis
+
+- Response variable (recurrent MI) is binary
+
+- Multiple predictors
+
+    - $>100$ covariates to begin
+    
+    - Several removed from consideration due to missingness
+
+## Model Building
+
+Two methods to select significant predictors:
+
+1. Backwards Elimination using AIC (`stepAIC`)
+    
+2. Elastic Net Penalized Regression (`glmnet`)
+
+Methods will pick predictors and build model
 
 ## Model
 
 $$ REC\_IM = \beta_0 + \beta_1 x_1 $$
+
+\end{subsection}
 
 # Discussion
 
