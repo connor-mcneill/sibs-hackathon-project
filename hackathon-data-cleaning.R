@@ -85,7 +85,10 @@ summary(step_model)
 summary(glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
             GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
               GEPAR_S_n + TRENT_S_n, family='binomial', data=mi_comp_clean))
-
+library(corrplot)
+step_cor <- cor(select(step_data, -REC_IM))
+corrplot(step_cor, type='upper', order='hclust',
+         tl.col='black', tl.srt=45, method='square')
 
 #--------------------LASSO/Elastic Net LOGISTIC REGRESSION----------------------------
 library(caret)

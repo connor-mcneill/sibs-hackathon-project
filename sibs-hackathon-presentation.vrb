@@ -1,0 +1,10 @@
+\frametitle{Model Building}
+\protect\hypertarget{model-building-1}{}
+Two methods to select significant predictors:
+
+\begin{enumerate}
+\item
+  Backwards Elimination using AIC (\texttt{stepAIC})
+\item
+  Elastic Net Penalized Regression (\texttt{glmnet})
+\end{enumerate}
