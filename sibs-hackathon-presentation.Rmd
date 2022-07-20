@@ -4,6 +4,7 @@ subtitle: 'SIBS Hackathon Presentation'
 author: "Kevin Krupa, Lucy Liu, Kendall McClellan, Connor McNeill"
 institute: "NCSU-Duke Summer Institute in Biostatistics"
 date: "July 21, 2022"
+mainfont: Arial
 output: 
   beamer_presentation: 
     theme: Frankfurt
@@ -43,7 +44,18 @@ What can we look at either during admission or the hospital stay in patients pos
 Which risk prediction model is best at predicting a recurrent heart attack?
 \end{block}
 
+## Missing Data
+
+- 7.6% missing values
+
+- Used `mice` library in `R` 
+
+    - Predictive Mean Modeling
+    
+    - 1700 completed observations instead of 0!
+
 # Descriptive Analysis
+
 
 ## Response Variable Correlation
 
