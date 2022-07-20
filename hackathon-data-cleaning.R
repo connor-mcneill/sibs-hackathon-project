@@ -86,6 +86,14 @@ summary(glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
             GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
               GEPAR_S_n + TRENT_S_n, family='binomial', data=mi_comp_clean))
 
+#---------------------Missing data-----------------------
+#library(mice)
+
+#option 1
+#mi_comp_clean1NEW <- mice(mi_comp_clean1, m=10,method = 'pmm', seed = 5)
+
+#option 2
+#mi_comp_clean2NEW <- mice(mi_comp_clean2, m=10,method = 'pmm', seed = 5)
 
 #--------------------LASSO/Elastic Net LOGISTIC REGRESSION----------------------------
 library(caret)
@@ -116,24 +124,24 @@ set.seed(123)
 cv.lasso.b <- cv.glmnet(xTrain, yTrain, alpha=1, standardize=TRUE, family="binomial", nfolds=10)
 plot(cv.lasso.b)
 
-cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01856392; this model includes 4 predictors
+cv.lasso.b$lambda.min #Average mean-squared prediction error is minimized when lambda = 0.01563434; this model includes 4 predictors
 
-cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
+cv.lasso.b$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.04774502 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
+lasso.b.coef <- coef(cv.lasso.b, s=cv.lasso.b$lambda.min) # lambda.min --> if Cross Validataion Curve's second vertial line ends up with 0 variables.
 lasso.b.coef #########MANY DROPPED!
 #exp(lasso.b.coef) #Estimated Odds Ratios
 #MANY VARIABLE IMPACT NEGATIVELY TO RESPONSE VAR.
 
 #~~~~~~ROC LASSO Option 1~~~~~~~~
 #FIRST, look at the estimated probabilities, and then convert these into"TRUE" or "FALSE":
-phat <- predict(cv.lasso.b, newx=xTest[1:10,], s=cv.lasso.b$lambda.1se, type="response")
-yhat <- predict(cv.lasso.b, newx=xTest[1:10,], s=cv.lasso.b$lambda.1se, type="class")
+phat <- predict(cv.lasso.b, newx=xTest[1:10,], s=cv.lasso.b$lambda.min, type="response")
+yhat <- predict(cv.lasso.b, newx=xTest[1:10,], s=cv.lasso.b$lambda.min, type="class")
 cbind(phat, yhat, yTest[1:10], unname(dTest[1:10,]))
 
 #SECOND,consider many ways to convert the estimated probabilities into TRUE or FALSE
-phat <- predict(cv.lasso.b, newx=xTest, s=cv.lasso.b$lambda.1se, type="response")
+phat <- predict(cv.lasso.b, newx=xTest, s=cv.lasso.b$lambda.min, type="response")
 #install.packages("ROCR")
 library(ROCR)
 perf <- ROCR::performance(ROCR::prediction(phat, yTest), "tpr", "fpr")
@@ -142,7 +150,7 @@ plot(perf, colorize=TRUE, print.cutoffs.at=seq(0,1,by=.1), text.adj=c(-0.2,1.7))
 
 #The ideal ROC curve has area-under-the-curve of one, so let's see how close we get to one:
 as.numeric( ROCR::performance(ROCR::prediction(phat, yTest), "auc")@y.values ) #AUC(ROC)
-#ANSWER: 0.5 --> STRAIGHT LINE.
+#ANSWER: 0.7147619
 
 #############LASSO Reg for option2: Make med variables binary#############
 set.seed(777)
@@ -170,7 +178,7 @@ cv.lasso.b2$lambda.min #Average mean-squared prediction error is minimized when 
 cv.lasso.b2$lambda.1se #The most-regularized model within one standard error of this "minimum' ' model has lambda = 0.047 and includes 0 predictors
 
 #Estimated Odds Ratios
-lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.min) #lambda.1se --> lambda.min b/c option 1 ends up with 0 variables.
+lasso.b.coef2 <- coef(cv.lasso.b2, s=cv.lasso.b2$lambda.1se) #lambda.1se (if Cross Validataion Curve's second vertial line ends up with More than 0 variables) VS. lambda.min --> if Cross Validataion Curve's second vertial line ends up with 0 variables.
 lasso.b.coef2 ######LESS ARE DROPPED THAN OPTION1
 #exp(lasso.b.coef2) #Estimated Odds Ratios
 #LOOKS BETTER, 5 VARIABLE IS LITTLE LESS
@@ -224,12 +232,12 @@ lasso.b.coef3 ###########NO GOOD... EVERYTHING DROPPED.
 
 #~~~~~~ROC Elastic Net Option 1~~~~~~~~
 #FIRST, look at the estimated probabilities, and then convert these into"TRUE" or "FALSE":
-phat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.1se, type="response")
-yhat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.1se, type="class")
+phat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.min, type="response")
+yhat <- predict(cv.lasso.b3, newx=xTest3[1:10,], s=cv.lasso.b3$lambda.min, type="class")
 cbind(phat, yhat, yTest3[1:10], unname(dTest3[1:10,]))
 
 #SECOND,consider many ways to convert the estimated probabilities into TRUE or FALSE
-phat <- predict(cv.lasso.b3, newx=xTest3, s=cv.lasso.b3$lambda.1se, type="response")
+phat <- predict(cv.lasso.b3, newx=xTest3, s=cv.lasso.b3$lambda.min, type="response")
 #install.packages("ROCR")
 library(ROCR)
 perf <- ROCR::performance(ROCR::prediction(phat, yTest3), "tpr", "fpr")
