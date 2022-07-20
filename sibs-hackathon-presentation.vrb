@@ -8,3 +8,5 @@ Two methods to select significant predictors:
 \item
   Elastic Net Penalized Regression (\texttt{glmnet})
 \end{enumerate}
+
+Methods will pick predictors and build model
