@@ -41,9 +41,9 @@ corr_plot <- ggcorrplot(res, method='circle')
 
 #cov(mi_comp$REC_IM, mi_comp$OTEK_LANC)
 
-#mi_comp_chr %>% 
-#  ggplot() +
-#  geom_boxplot(aes(y=AGE, x=REC_IM, fill=REC_IM))
+mi_comp_chr %>% 
+  ggplot() +
+  geom_boxplot(aes(y=AGE, x=REC_IM, fill=REC_IM))
 
 #mi_comp_chr %>% 
 #  ggplot() +
@@ -102,30 +102,30 @@ corr_plot <- ggcorrplot(res, method='circle')
 #   geom_boxplot(aes(y=mi_comp_chr$REC_IM, fill=mi_comp_chr$REC_IM, x=mi_comp$STENOK_AN), show.legend=FALSE) +
 #   labs(x='STENOK_AN', y='REC_IM', fill='REC_IM')
 # 
-# mi_comp_chr %>% 
-#   remove_missing(vars=c('STENOK_AN')) %>% 
-#   ggplot() +
-#   geom_bar(aes(x=STENOK_AN, fill=factor(REC_IM)), show.legend=FALSE) +
-#   facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
-#   labs(x = 'Exertional AP Time Period (Years Since)')
+ mi_comp_chr %>% 
+   remove_missing(vars=c('STENOK_AN')) %>% 
+   ggplot() +
+   geom_bar(aes(x=STENOK_AN, fill=factor(REC_IM)), show.legend=FALSE) +
+   facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+   labs(x = 'Exertional AP Time Period (Years Since)')
+
+ labels <- c(
+   `No` = 'No Rec MI',
+   `Yes` = 'Rec MI' )
 # 
-# labels <- c(
-#   `No` = 'No Rec MI',
-#   `Yes` = 'Rec MI' )
 # 
+mi_comp_chr %>%
+  remove_missing(vars=c('AGE')) %>%
+  ggplot() +
+  geom_histogram(aes(x=AGE, fill=factor(REC_IM)), bins=10, show.legend=FALSE) +
+  facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
+  labs(x = 'Age (Years)')
 # 
-# mi_comp_chr %>% 
-#   remove_missing(vars=c('AGE')) %>% 
-#   ggplot() +
-#   geom_histogram(aes(x=AGE, fill=factor(REC_IM)), bins=10, show.legend=FALSE) +
-#   facet_wrap(facets=vars(REC_IM), scales='free', labeller=as_labeller(labels)) +
-#   labs(x = 'Age (Years)')
-# 
-# mi_comp_chr %>% 
-#   remove_missing(vars=c('AGE')) %>% 
-#   ggplot() +
-#   geom_boxplot(aes(y=REC_IM, x=AGE, fill=REC_IM), show.legend=FALSE) +
-#   labs(y='Recurrent MI', x='Age (Years)') 
+mi_comp_chr %>%
+  remove_missing(vars=c('AGE')) %>%
+  ggplot() +
+  geom_boxplot(aes(y=REC_IM, x=AGE, fill=REC_IM), show.legend=FALSE) +
+  labs(y='Recurrent MI', x='Age (Years)')
 # 
 # step_pred_corr <- mi_comp_clean %>% 
 #   select(AGE, STENOK_AN, endocr_01, zab_leg_01, GT_POST,

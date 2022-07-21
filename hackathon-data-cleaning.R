@@ -1,7 +1,7 @@
 # Load in Libraries
 library(tidyverse)
 library(mice)
-
+load('data-files/completedData.RData')
 # Import Data
 load('data-files/mi_comp_data_original.RData')
 mi_comp <- read.csv("D:/NCSU/Summer2022/SIBS/SIBS_HackAThon/Myocardial infarction complications Database.csv")
@@ -30,15 +30,16 @@ nas %>%
 
 # Remove Variables Not Needed
 ## First remove other response variables
+load('data-files/completedData.RData')
 other_response_vars <-  
   c('FIBR_PREDS', 'PREDS_TAH', 'JELUD_TAH',
          'FIBR_JELUD', 'A_V_BLOK', 'OTEK_LANC',
          'RAZRIV', 'DRESSLER', 'ZSN',
          'P_IM_STEN', 'LET_IS')
-mi_comp_clean <- mi_comp %>% 
+completed_clean <- completedData %>% 
   select(-ID, -KFK_BLOOD, -IBS_NASL, -S_AD_KBRIG, -D_AD_KBRIG,
          -NOT_NA_KB, -LID_KB, -NA_KB, -GIPER_NA, -NA_BLOOD,
-         -K_BLOOD, -GIPO_K, -AST_BLOOD, -other_response_vars,
+         -K_BLOOD, -GIPO_K, -AST_BLOOD, 
          -ALT_BLOOD, -S_AD_ORIT, -D_AD_ORIT, -ROE, -TIME_B_S,
          -82:-55, -53:-50, -26:-13) %>%
 remove_missing()
@@ -61,7 +62,7 @@ mi_comp_clean1 <- mi_comp_clean %>%
   select(-NA_R_1_n, -NA_R_2_n, -NA_R_3_n)
   
 # Option 2: Make med variables binary
-mi_comp_clean2 <- mi_comp_clean %>% 
+completed_clean2 <- completed_clean %>% 
   mutate(NOT_NA_1_n = if_else(NOT_NA_1_n == 0, 0, 1),
          NOT_NA_2_n = if_else(NOT_NA_2_n == 0, 0, 1),
          NOT_NA_3_n = if_else(NOT_NA_3_n == 0, 0, 1),
@@ -94,7 +95,7 @@ step_data <- mi_comp %>%
 
 # Look at models
 summary(step_model)
-<<<<<<< HEAD
+#<<<<<<< HEAD
 sink('model_summary.txt') sink()
 step_model2 <- glm(REC_IM ~ AGE + STENOK_AN + endocr_01 + zab_leg_01 +
                      GT_POST + lat_im + R_AB_3_n + NA_R_2_n + ANT_CA_S_n +
